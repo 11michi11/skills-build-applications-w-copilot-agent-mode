@@ -1,5 +1,5 @@
 import express from 'express';
-import { connectDatabase } from './lib/database.js';
+import { connectDatabase } from './config/database.js';
 import { ActivityModel, LeaderboardModel, TeamModel, UserModel, WorkoutModel, } from './models/index.js';
 const app = express();
 const port = 8000;

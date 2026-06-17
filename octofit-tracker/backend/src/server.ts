@@ -1,5 +1,5 @@
 import express from 'express';
-import { connectDatabase } from './lib/database.js';
+import { connectDatabase } from './config/database.js';
 import {
   ActivityModel,
   LeaderboardModel,
