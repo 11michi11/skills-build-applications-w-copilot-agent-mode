@@ -1,7 +1,13 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
+import Activities from './components/Activities.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
+import Teams from './components/Teams.jsx'
+import Users from './components/Users.jsx'
+import Workouts from './components/Workouts.jsx'
 
 const logoPath = '/docs/octofitapp-small.png'
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
 
 function App() {
   return (
@@ -33,9 +39,14 @@ function App() {
                     React 19 and Bootstrap power the presentation tier, while the API tier is ready for Express, TypeScript, and Mongoose.
                   </p>
                   <div className="d-flex gap-3 flex-wrap">
-                    <Link className="btn btn-success btn-lg" to="/activity">Start tracking</Link>
-                    <Link className="btn btn-outline-secondary btn-lg" to="/teams">Manage teams</Link>
+                    <Link className="btn btn-success btn-lg" to="/activities">View activities</Link>
+                    <Link className="btn btn-outline-secondary btn-lg" to="/leaderboard">View leaderboard</Link>
                   </div>
+                  {!codespaceName ? (
+                    <div className="alert alert-warning mt-4 mb-0" role="alert">
+                      Define <strong>VITE_CODESPACE_NAME</strong> in <code>.env.local</code> to build Codespaces API URLs. A localhost fallback is used when it is unset.
+                    </div>
+                  ) : null}
                 </div>
                 <div className="col-lg-5">
                   <div className="card border-0 shadow-lg">
@@ -50,7 +61,8 @@ function App() {
                       <ul className="list-unstyled mb-0 text-secondary">
                         <li className="mb-2">React 19 + Vite</li>
                         <li className="mb-2">Bootstrap styling</li>
-                        <li>react-router-dom navigation</li>
+                        <li className="mb-2">react-router-dom navigation</li>
+                        <li>Codespaces-aware API URLs with localhost fallback</li>
                       </ul>
                     </div>
                   </div>
@@ -59,13 +71,17 @@ function App() {
             }
           />
           <Route
-            path="/activity"
-            element={<section className="card border-0 shadow-sm"><div className="card-body p-4"><h2 className="h3">Activity</h2><p className="text-secondary mb-0">Workout logging will connect to the backend API.</p></div></section>}
+            path="/activities"
+            element={<Activities />}
           />
           <Route
-            path="/teams"
-            element={<section className="card border-0 shadow-sm"><div className="card-body p-4"><h2 className="h3">Teams</h2><p className="text-secondary mb-0">Team management and leaderboard views will be built here.</p></div></section>}
+            path="/leaderboard"
+            element={<Leaderboard />}
           />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/workouts" element={<Workouts />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
