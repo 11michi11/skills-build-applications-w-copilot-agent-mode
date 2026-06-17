@@ -28,12 +28,20 @@ app.get('/api/config', (_request, response) => {
   response.json({ apiBaseUrl: getApiBaseUrl() });
 });
 
-app.get('/api/users/', (_request, response) => {
+function sendUsers(response: express.Response) {
   UserModel.find()
     .sort({ createdAt: -1 })
     .lean()
     .then((items) => response.json({ resource: 'users', items }))
     .catch((error) => response.status(500).json({ error: 'Failed to load users', details: String(error) }));
+}
+
+app.get('/api/users', (_request, response) => {
+  sendUsers(response);
+});
+
+app.get('/api/users/', (_request, response) => {
+  sendUsers(response);
 });
 
 app.get('/api/teams/', (_request, response) => {
@@ -42,10 +50,18 @@ app.get('/api/teams/', (_request, response) => {
     .catch((error) => response.status(500).json({ error: 'Failed to load teams', details: String(error) }));
 });
 
-app.get('/api/activities/', (_request, response) => {
+function sendActivities(response: express.Response) {
   ActivityModel.find().sort({ performedAt: -1 }).lean()
     .then((items) => response.json({ resource: 'activities', items }))
     .catch((error) => response.status(500).json({ error: 'Failed to load activities', details: String(error) }));
+}
+
+app.get('/api/activities', (_request, response) => {
+  sendActivities(response);
+});
+
+app.get('/api/activities/', (_request, response) => {
+  sendActivities(response);
 });
 
 app.get('/api/leaderboard/', (_request, response) => {
