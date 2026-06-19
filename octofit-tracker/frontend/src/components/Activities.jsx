@@ -1,12 +1,50 @@
 import { useEffect, useState } from 'react'
-import { fetchResource, getApiEndpoint, normalizeItems } from '../lib/api.js'
+
+const localhostBaseUrl = 'http://localhost:8000'
+
+function getApiBaseUrl() {
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+
+  if (!codespaceName) {
+    return localhostBaseUrl
+  }
+
+  return `https://${codespaceName}-8000.app.github.dev`
+}
+
+function getApiEndpoint() {
+  return `${getApiBaseUrl()}/api/activities/`
+}
+
+function normalizeItems(payload) {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  if (Array.isArray(payload?.items)) {
+    return payload.items
+  }
+
+  if (Array.isArray(payload?.results)) {
+    return payload.results
+  }
+
+  return []
+}
 
 function Activities() {
   const [items, setItems] = useState([])
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchResource('activities')
+    fetch(getApiEndpoint())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to load activities')
+        }
+
+        return response.json()
+      })
       .then((payload) => setItems(normalizeItems(payload)))
       .catch((loadError) => setError(loadError.message))
   }, [])
@@ -18,7 +56,7 @@ function Activities() {
           <div>
             <p className="text-uppercase text-success fw-semibold mb-2">Activities</p>
             <h2 className="h3 mb-1">Activity log</h2>
-            <p className="text-secondary mb-0">Loaded from {getApiEndpoint('activities')}</p>
+            <p className="text-secondary mb-0">Loaded from {getApiEndpoint()}</p>
           </div>
         </div>
         {error ? <div className="alert alert-danger">{error}</div> : null}

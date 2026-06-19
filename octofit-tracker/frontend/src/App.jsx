@@ -20,8 +20,11 @@ function App() {
           </Link>
           <div className="navbar-nav ms-auto gap-lg-3">
             <Link className="nav-link" to="/">Dashboard</Link>
-            <Link className="nav-link" to="/activity">Activity</Link>
+            <Link className="nav-link" to="/activities">Activities</Link>
+            <Link className="nav-link" to="/leaderboard">Leaderboard</Link>
             <Link className="nav-link" to="/teams">Teams</Link>
+            <Link className="nav-link" to="/users">Users</Link>
+            <Link className="nav-link" to="/workouts">Workouts</Link>
           </div>
         </div>
       </nav>
