@@ -1,21 +1,5 @@
 import { useEffect, useState } from 'react'
 
-const localhostBaseUrl = 'http://localhost:8000'
-
-function getApiBaseUrl() {
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME
-
-  if (!codespaceName) {
-    return localhostBaseUrl
-  }
-
-  return `https://${codespaceName}-8000.app.github.dev`
-}
-
-function getApiEndpoint() {
-  return `${getApiBaseUrl()}/api/leaderboard/`
-}
-
 function normalizeItems(payload) {
   if (Array.isArray(payload)) {
     return payload
@@ -35,9 +19,12 @@ function normalizeItems(payload) {
 function Leaderboard() {
   const [items, setItems] = useState([])
   const [error, setError] = useState('')
+  const apiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+    ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+    : 'http://localhost:8000/api/leaderboard/'
 
   useEffect(() => {
-    fetch(getApiEndpoint())
+    fetch(apiEndpoint)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to load leaderboard')
@@ -54,7 +41,7 @@ function Leaderboard() {
       <div className="card-body p-4">
         <p className="text-uppercase text-success fw-semibold mb-2">Leaderboard</p>
         <h2 className="h3 mb-1">Performance ranking</h2>
-        <p className="text-secondary mb-4">Loaded from {getApiEndpoint()}</p>
+        <p className="text-secondary mb-4">Loaded from {apiEndpoint}</p>
         {error ? <div className="alert alert-danger">{error}</div> : null}
         <div className="table-responsive">
           <table className="table align-middle mb-0">
